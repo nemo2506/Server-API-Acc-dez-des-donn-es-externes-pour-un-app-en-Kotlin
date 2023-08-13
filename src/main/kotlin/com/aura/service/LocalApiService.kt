@@ -4,8 +4,16 @@ import com.aura.model.User
 import com.aura.model.balance.BalanceResult
 import com.aura.model.login.Credentials
 import com.aura.model.login.CredentialsResult
+import com.aura.model.transfer.Transfer
+import com.aura.model.transfer.TransferResult
 
 class LocalApiService : ApiService {
+
+    private val users = listOf(
+        User("1234", "Pierre", "Brisette", "p@sswOrd", 2354.23),
+        User("5678", "Gustave", "Charbonneau", "T0pSecr3t", 521.36)
+    )
+
     override fun login(credentials: Credentials): CredentialsResult {
         val user = getUserById(credentials.id)
         return CredentialsResult(user?.password == credentials.password)
@@ -16,15 +24,22 @@ class LocalApiService : ApiService {
         return BalanceResult(user?.balance)
     }
 
-    private fun getUserById(id: String): User? {
-        return getAllUsers().firstOrNull { it.id == id }
+    override fun transfer(transfer: Transfer): TransferResult {
+        val sender = getUserById(transfer.senderId) ?: throw IllegalArgumentException("The sender cannot be found")
+        val recipient = getUserById(transfer.recipientId) ?: throw IllegalArgumentException("The recipient cannot be found")
+
+        if( transfer.amount < 0 ) {
+            throw IllegalArgumentException("The amount to send cannot be negative")
+        }
+
+        sender.balance -= transfer.amount
+        recipient.balance += transfer.amount
+
+        return TransferResult(true)
     }
 
-    private fun getAllUsers(): List<User> {
-        return listOf(
-            User("1234", "Pierre", "Brisette", "p@sswOrd", 2354.23),
-            User("5678", "Gustave", "Charbonneau", "T0pSecr3t", 521.36)
-        )
+    private fun getUserById(id: String): User? {
+        return users.firstOrNull { it.id == id }
     }
 
 }

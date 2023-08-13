@@ -5,5 +5,5 @@ data class User(
     val firstname: String,
     val lastname: String,
     val password: String,
-    val balance: Double,
+    var balance: Double,
 )

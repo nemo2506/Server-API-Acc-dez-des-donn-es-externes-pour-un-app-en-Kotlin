@@ -1,5 +1,6 @@
 package com.aura
 
+import com.aura.model.transfer.Transfer
 import com.aura.model.login.Credentials
 import com.aura.repository.ApiRepository
 import io.ktor.serialization.kotlinx.json.*
@@ -30,6 +31,11 @@ fun main() {
             get("/balance/{id}") {
                 val id = call.parameters["id"] ?: throw IllegalArgumentException("Missing id path params")
                 call.respond(ApiRepository.balance(id))
+            }
+
+            post("transfer") {
+                val transfer = call.receive<Transfer>()
+                call.respond(ApiRepository.transfer(transfer))
             }
         }
     }.start(wait = true)
