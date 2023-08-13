@@ -1,34 +1,19 @@
 package com.aura.service
 
-import com.aura.model.ApiResult
 import com.aura.model.User
 import com.aura.model.balance.BalanceResult
 import com.aura.model.login.Credentials
 import com.aura.model.login.CredentialsResult
 
 class LocalApiService : ApiService {
-    override fun login(credentials: Credentials): ApiResult<CredentialsResult> {
+    override fun login(credentials: Credentials): CredentialsResult {
         val user = getUserById(credentials.id)
-
-        return if(user != null)
-        {
-            if(user.password == credentials.password) {
-                ApiResult(CredentialsResult(true))
-            }
-            else {
-                ApiResult(CredentialsResult(false))
-            }
-        }
-        else
-        {
-            ApiResult(CredentialsResult(false))
-        }
+        return CredentialsResult(user?.password == credentials.password)
     }
 
-    override fun balance(id: String): ApiResult<BalanceResult> {
+    override fun balance(id: String): BalanceResult {
         val user = getUserById(id)
-
-        return ApiResult(BalanceResult(user?.balance))
+        return BalanceResult(user?.balance)
     }
 
     private fun getUserById(id: String): User? {
