@@ -18,6 +18,9 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0-RC")
 
+    implementation("io.ktor:ktor-server-cors:2.3.3")
+    implementation("io.ktor:ktor-server-swagger:2.3.3")
+
     testImplementation(kotlin("test"))
 }
 
