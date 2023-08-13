@@ -26,6 +26,11 @@ fun main() {
                 val credentials = call.receive<Credentials>()
                 call.respond(ApiRepository.login(credentials))
             }
+
+            get("/balance/{id}") {
+                val id = call.parameters["id"] ?: throw IllegalArgumentException("Missing id path params")
+                call.respond(ApiRepository.balance(id))
+            }
         }
     }.start(wait = true)
 }
