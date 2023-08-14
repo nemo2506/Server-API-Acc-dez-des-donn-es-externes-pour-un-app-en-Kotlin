@@ -32,10 +32,16 @@ class LocalApiService : ApiService {
             throw IllegalArgumentException("The amount to send cannot be negative")
         }
 
-        sender.balance -= transfer.amount
-        recipient.balance += transfer.amount
+        return if(sender.balance - transfer.amount < 0)
+        {
+            TransferResult(false)
+        }
+        else {
+            sender.balance -= transfer.amount
+            recipient.balance += transfer.amount
 
-        return TransferResult(true)
+            TransferResult(true)
+        }
     }
 
     private fun getUserById(id: String): User? {
