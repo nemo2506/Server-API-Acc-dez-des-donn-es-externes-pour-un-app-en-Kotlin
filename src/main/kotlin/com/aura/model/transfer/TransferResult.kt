@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TransferResult(
-    @SerialName("done") val granted: Boolean,
+    @SerialName("result") val result: Boolean,
 )
