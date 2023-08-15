@@ -12,8 +12,8 @@ servers:
 tags:
   - name: login
     description: Everything about user connection
-  - name: balance
-    description: Access to users' balance
+  - name: accounts
+    description: Access to users' accounts
   - name: transfer
     description: Operations on users' account
 paths:
@@ -40,28 +40,29 @@ paths:
                 $ref: '#/components/schemas/CredentialsResult'
         'default':
           description: issue with the request
-  /balance/{id}:
+  /accounts/{id}:
     get:
       tags:
-        - balance
-      summary: Gets balance by user id
-      description: Returns a single balance
-      operationId: findBalanceById
+        - accounts
+      summary: Gets accounts by user id
+      description: Returns a list of accounts
+      operationId: findAccountsByUserId
       parameters:
         - name: id
           in: path
-          description: ID of user to return the balance
+          description: ID of user to return the accounts
           required: true
           schema:
-            type: integer
-            format: int64
+            type: string
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BalanceResult'
+                type: array
+                items:
+                 $ref: '#/components/schemas/Account'
         'default':
           description: Issue with the request
   /transfer:
@@ -104,9 +105,15 @@ components:
         granted:
           type: boolean
           example: true
-    BalanceResult:
+    Account:
       type: object
       properties:
+        id:
+          type: string
+          example: "1"
+        main:
+          type: boolean
+          example: true
         amount:
           type: number
           example: 2331.31

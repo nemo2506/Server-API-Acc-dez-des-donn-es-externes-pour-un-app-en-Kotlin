@@ -1,6 +1,6 @@
 package com.aura.service
 
-import com.aura.model.balance.BalanceResult
+import com.aura.model.Account
 import com.aura.model.login.Credentials
 import com.aura.model.login.CredentialsResult
 import com.aura.model.transfer.Transfer
@@ -10,7 +10,7 @@ interface ApiService {
 
     fun login(credentials: Credentials): CredentialsResult
 
-    fun balance(id: String): BalanceResult
+    fun accounts(id: String): List<Account>
 
     fun transfer(transfer: Transfer): TransferResult
 

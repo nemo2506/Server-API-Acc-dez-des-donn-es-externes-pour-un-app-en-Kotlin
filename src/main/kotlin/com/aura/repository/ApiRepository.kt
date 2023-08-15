@@ -1,6 +1,6 @@
 package com.aura.repository
 
-import com.aura.model.balance.BalanceResult
+import com.aura.model.Account
 import com.aura.model.login.Credentials
 import com.aura.model.login.CredentialsResult
 import com.aura.model.transfer.Transfer
@@ -16,8 +16,8 @@ object ApiRepository: ApiService {
         return apiService.login(credentials)
     }
 
-    override fun balance(id: String): BalanceResult {
-        return apiService.balance(id)
+    override fun accounts(id: String): List<Account> {
+        return apiService.accounts(id)
     }
 
     override fun transfer(transfer: Transfer): TransferResult {
