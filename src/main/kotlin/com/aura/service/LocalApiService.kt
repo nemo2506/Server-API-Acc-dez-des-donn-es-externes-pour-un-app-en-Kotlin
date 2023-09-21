@@ -7,8 +7,14 @@ import com.aura.model.login.CredentialsResult
 import com.aura.model.transfer.Transfer
 import com.aura.model.transfer.TransferResult
 
+/**
+ * A local implementation of the ApiService interface.
+ */
 class LocalApiService : ApiService {
 
+    /**
+     * A list of all users.
+     */
     private val users = listOf(
         User("1234", "Pierre", "Brisette", "p@sswOrd",
             listOf(
@@ -57,6 +63,11 @@ class LocalApiService : ApiService {
         }
     }
 
+    /**
+     * Gets a user by their ID.
+     * @param id The user's ID.
+     * @return The user, or null if the user cannot be found.
+     */
     private fun getUserById(id: String): User? {
         return users.firstOrNull { it.id == id }
     }

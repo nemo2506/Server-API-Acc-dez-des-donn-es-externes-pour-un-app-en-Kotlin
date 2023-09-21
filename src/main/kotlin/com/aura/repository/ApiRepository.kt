@@ -8,8 +8,14 @@ import com.aura.model.transfer.TransferResult
 import com.aura.service.ApiService
 import com.aura.service.LocalApiService
 
+/**
+ * An object that provides a single point of access to the API.
+ */
 object ApiRepository: ApiService {
 
+    /**
+     * The API service.
+     */
     private val apiService: ApiService = LocalApiService()
 
     override fun login(credentials: Credentials): CredentialsResult {
