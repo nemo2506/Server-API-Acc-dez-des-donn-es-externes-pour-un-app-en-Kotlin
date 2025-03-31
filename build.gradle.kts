@@ -25,6 +25,7 @@ dependencies {
 
     implementation("io.ktor:ktor-server-cors:2.3.3")
     implementation("io.ktor:ktor-server-swagger:2.3.3")
+    implementation("org.slf4j:slf4j-simple:1.7.36")
 
     testImplementation(kotlin("test"))
 }
