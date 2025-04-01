@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.0"
     kotlin("plugin.serialization") version "1.9.0"
     id("io.ktor.plugin") version "2.3.3"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 application {
@@ -39,12 +40,13 @@ kotlin {
     jvmToolchain(8)
 }
 
-tasks.jar {
+tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    archiveBaseName.set("ktor-server")
+    archiveClassifier.set("")
+    archiveVersion.set("1.0")
+
     manifest {
         attributes["Main-Class"] = "com.aura.MainKt"
     }
-
-    from({
-        configurations.runtimeClasspath.get().filter { it.exists() }.map { if (it.isDirectory) it else zipTree(it) }
-    })
 }
+
