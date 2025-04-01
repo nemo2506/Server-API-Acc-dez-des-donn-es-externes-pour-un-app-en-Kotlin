@@ -28,6 +28,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:1.7.36")
 
     testImplementation(kotlin("test"))
+
 }
 
 tasks.test {
@@ -36,4 +37,14 @@ tasks.test {
 
 kotlin {
     jvmToolchain(8)
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "com.aura.MainKt"
+    }
+
+    from({
+        configurations.runtimeClasspath.get().filter { it.exists() }.map { if (it.isDirectory) it else zipTree(it) }
+    })
 }
