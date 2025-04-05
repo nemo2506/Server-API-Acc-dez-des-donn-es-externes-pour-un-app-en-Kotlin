@@ -15,13 +15,31 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
-
+import java.io.File
+import io.ktor.server.engine.sslConnector
 /**
  * The main entry point for the application.
  */
 fun main() {
     // Starts an embedded Netty server on port 8080.
-    embeddedServer(Netty, port = 8080) {
+//    embeddedServer(Netty, port = 8080) {
+    embeddedServer(Netty) {
+
+        // HTTPS configuration
+        sslConnector(
+            keyStore = File("src/main/resources/keystore.p12").inputStream().use {
+                java.security.KeyStore.getInstance("PKCS12").apply {
+                    load(it, "passw0rd".toCharArray())
+                }
+            },
+            keyAlias = "aurabank_ssl",
+            keyStorePassword = { "passw0rd".toCharArray() },
+            privateKeyPassword = { "passw0rd".toCharArray() }
+        ) {
+            port = 8443 // HTTPS port
+            keyStorePath = File("src/main/resources/keystore.p12")
+        }
+
         install(ContentNegotiation) {
             json(Json {
                 prettyPrint = true
