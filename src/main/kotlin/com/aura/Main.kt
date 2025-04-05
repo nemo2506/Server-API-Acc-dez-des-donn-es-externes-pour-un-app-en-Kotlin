@@ -17,15 +17,9 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 import java.io.File
 import io.ktor.server.engine.sslConnector
-/**
- * The main entry point for the application.
- */
-fun main() {
-    // Starts an embedded Netty server on port 8080.
-//    embeddedServer(Netty, port = 8080) {
-    embeddedServer(Netty) {
 
-        // HTTPS configuration
+fun main() {
+    embeddedServer(Netty, environment = applicationEngineEnvironment {
         sslConnector(
             keyStore = File("src/main/resources/keystore.p12").inputStream().use {
                 java.security.KeyStore.getInstance("PKCS12").apply {
@@ -36,46 +30,41 @@ fun main() {
             keyStorePassword = { "passw0rd".toCharArray() },
             privateKeyPassword = { "passw0rd".toCharArray() }
         ) {
-            port = 8443 // HTTPS port
+            port = 8443
             keyStorePath = File("src/main/resources/keystore.p12")
         }
 
-        install(ContentNegotiation) {
-            json(Json {
-                prettyPrint = true
-                isLenient = true
-            })
-        }
-
-        // Installs the CORS feature, which allows the server to respond to requests
-        // from any host.
-        install(CORS) {
-            anyHost()
-            allowHeader(HttpHeaders.ContentType)
-        }
-
-        // Defines the routing for the server.
-        routing {
-            // Defines a POST endpoint for logging in users.
-            post("/login") {
-                val credentials = call.receive<Credentials>()
-                call.respond(ApiRepository.login(credentials))
+        module {
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                })
             }
 
-            // Defines a GET endpoint for fetching a user's account information.
-            get("/accounts/{id}") {
-                val id = call.parameters["id"] ?: throw IllegalArgumentException("Missing id path params")
-                call.respond(ApiRepository.accounts(id))
+            install(CORS) {
+                anyHost()
+                allowHeader(HttpHeaders.ContentType)
             }
 
-            // Defines a POST endpoint for transferring money between accounts.
-            post("transfer") {
-                val transfer = call.receive<Transfer>()
-                call.respond(ApiRepository.transfer(transfer))
-            }
+            routing {
+                post("/login") {
+                    val credentials = call.receive<Credentials>()
+                    call.respond(ApiRepository.login(credentials))
+                }
 
-            // Serves the Swagger UI documentation, which allows clients to explore the API.
-            swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
+                get("/accounts/{id}") {
+                    val id = call.parameters["id"] ?: throw IllegalArgumentException("Missing id path params")
+                    call.respond(ApiRepository.accounts(id))
+                }
+
+                post("transfer") {
+                    val transfer = call.receive<Transfer>()
+                    call.respond(ApiRepository.transfer(transfer))
+                }
+
+                swaggerUI(path = "swagger", swaggerFile = "openapi/documentation.yaml")
+            }
         }
-    }.start(wait = true)
+    }).start(wait = true)
 }
